@@ -6,6 +6,14 @@ export const getCurrentTier = (tiers) => {
   var now = new Date();
   var earliest = new Date();
 
+  if (!tiers) {
+    return {
+      'start-time': { time: now.toISOString() },
+      'end-time': { time: earliest.toISOString() },
+      cost: -1,
+    };
+  }
+
   // Loop through the tiers and find the current one
   for (var i = 0; i < tiers.length; i++) {
     var tier = tiers[i];

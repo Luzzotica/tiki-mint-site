@@ -52,6 +52,9 @@ function MintRender() {
     if (amount + value < 1 || amount + value > 10) {
       return;
     } 
+    if (mintLimit !== -1 && amount + value > mintLimit - mintCount) {
+      return;
+    }
 
     setAmount(amount + value);
   }
@@ -65,7 +68,7 @@ function MintRender() {
       <FlexColumn className="w-96 gap-4 justify-center place-items-center">
         {price >= 0 && mintCount !== -1 ? 
           <FlexColumn className="flex-auto gap-4 text-center content-center">
-            <p className='text-xl'>You can mint from this tier {mintLimit - mintCount}{mintLimit - mintCount === 1.0 ? 'time' : 'times'}</p>
+            <p className='text-xl'>You can mint from this tier {mintLimit - mintCount}{mintLimit - mintCount === 1.0 ? ' time' : ' times'}</p>
           </FlexColumn>
         :
           <></>

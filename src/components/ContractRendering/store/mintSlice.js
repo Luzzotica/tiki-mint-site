@@ -153,7 +153,7 @@ export const mintNft = (chainId, account, amount, price) => {
     dispatch(mintSlice.actions.setMinted(minted + amount));
     var result = await dispatch(signAndSend(chainId, pactCode, {}, caps, 2000 * amount, 1e-8));
     console.log('Normal', result);
-    mintSlice.setMintedTokens
+    // dispatch(mintSlice.setMintedTokens
 
     // if (result.result.status = 'success') {
     //   console.log(result.result.data);

@@ -13,10 +13,10 @@ import FlexColumn from '../Layout/FlexColumn';
 import { messageToastManager, txToastManager, walletConnectedToastManager } from '../TxToast/TxToastManager';
 import MintContractRender from './components/MintContractRender';
 import MintRender from './components/MintRender';
+import NftList from './components/NftList';
 import { initAccountData, initMintContractData } from './store/mintSlice';
 
 import './index.css'
-import NftList from './components/NftList';
 
 function MintPage() {
   const chainId = import.meta.env.VITE_CHAIN_ID
@@ -25,7 +25,7 @@ function MintPage() {
   const account = useSelector(state => state.kadenaInfo.account);
   const bank = useSelector(state => state.mintInfo.bank);
 
-  const initData = async () => {
+  const initData = async () => { 
     await dispatch(initMintContractData(chainId));
   }
 
@@ -63,12 +63,12 @@ function MintPage() {
         modalStyle="border-white border rounded-3xl py-4 px-8 shadow-lg min-w-max max-w-xl flex flex-col space-y-4 bg-slate-800"
         buttonStyle="bg-yellow-500 border-slate-100 border py-2 px-4 rounded-3xl hover:border-slate-300 active:border-slate-700 focus:border-slate-500 transition duration-150 ease-out"
       />
-      <FlexColumn className='gap-2 fixed px-2 bottom-2 z-10 w-full place-items-center sm:place-items-start'>
+      <FlexColumn className='gap-2 fixed px-2 bottom-2 z-10 w-full sm:w-48 place-items-center sm:place-items-start'>
         <div className="w-20 text-center rounded-3xl bg-slate-900 py-1 px-1">
           <span className="text-sm text-white">Chain {chainId}</span>
         </div>
         {account !== '' ? 
-          <FlexColumn className='w-full sm:w-auto gap-1 rounded-3xl bg-slate-900 py-2 px-2'>
+          <FlexColumn className='w-max sm:w-auto gap-1 rounded-3xl bg-slate-900 py-2 px-2'>
             <CustomButton
               className='text-white'
               text={"Disconnect"}

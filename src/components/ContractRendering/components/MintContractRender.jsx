@@ -66,11 +66,15 @@ function MintContractRender() {
   const [countdown, setCountdown] = useState({});
   useEffect(() => {
     // console.log('tier has end', tierHasEnd);
-    console.log(timerStatus);
+    // console.log(timerStatus);
     if (timerStatus === 'final') {
       clearInterval(timer);
     }
     else {
+      // If we already have a timer, clear it
+      if (timer) {
+        clearInterval(timer);
+      }
       timer = setInterval(() => { 
         let countdownData = formatCountdown(endTime)
         setCountdown(countdownData);
@@ -83,7 +87,7 @@ function MintContractRender() {
     return () => {
       clearInterval(timer);
     }
-  }, [timerStatus]);
+  }, [timerStatus, endTime, collectionData]);
 
   return (
     <FlexColumn className='gap-10'>
