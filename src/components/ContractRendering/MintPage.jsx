@@ -16,7 +16,7 @@ import MintRender from './components/MintRender';
 import { initAccountData, initMintContractData } from './store/mintSlice';
 
 import './index.css'
-import NftList from './components/NFTList';
+import NftList from './components/NftList';
 
 function MintPage() {
   const chainId = import.meta.env.VITE_CHAIN_ID

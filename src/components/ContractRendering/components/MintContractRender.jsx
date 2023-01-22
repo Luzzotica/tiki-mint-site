@@ -25,6 +25,7 @@ function MintContractRender() {
 
   const currentTier = useSelector(state => state.mintInfo.currentTier);
   const [timerStatus, setTimerStatus] = useState('before');
+  
   const [tierName, setTierName] = useState('');
   const [endTime, setEndTime] = useState(new Date());
   const [priceText, setPriceText] = useState('');
@@ -50,7 +51,7 @@ function MintContractRender() {
     if (currentTier.cost < 0) {
       setTimerStatus('before');
     }
-    if (currentTier['end-time']['time'] !== currentTier['start-time']['time']) {
+    else if (currentTier['end-time']['time'] !== currentTier['start-time']['time']) {
       setTimerStatus('during');
     }
     else {
@@ -65,6 +66,7 @@ function MintContractRender() {
   const [countdown, setCountdown] = useState({});
   useEffect(() => {
     // console.log('tier has end', tierHasEnd);
+    console.log(timerStatus);
     if (timerStatus === 'final') {
       clearInterval(timer);
     }
@@ -88,7 +90,7 @@ function MintContractRender() {
       <h1 className='text-7xl text-center'>{tierName}</h1>
       {timerStatus !== 'final' ? 
         <FlexColumn className="flex-1 text-center">
-          <p className='text-xl'>{timerStatus === 'before' ? 'Mint Starts In' : 'Time Remaining'}</p>
+          <p className='text-3xl'>{timerStatus === 'before' ? 'Mint Starts In' : 'Time Remaining'}</p>
           <FlexRow className='gap-4 justify-center'> 
             <FlexColumn className='w-32'>
               <h1 className='flex-auto text-white text-7xl font-extrabold'>{countdown.hours}</h1>
