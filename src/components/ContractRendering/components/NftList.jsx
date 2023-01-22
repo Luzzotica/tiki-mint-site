@@ -26,7 +26,7 @@ function NftList(props) {
 
   if (nftRenders.length > 0) {
     return (
-      <FlexColumn className={`gap-2 text-white place-items-center ${props.className}`}>
+      <FlexColumn className={`gap-2 px-4 text-white place-items-center ${props.className}`}>
         <span className='text-7xl font-bold text-center'>Your Tikis</span>
         <FlexRow className='w-full flex-1 gap-2 justify-around place-items-center '>
           {nftRenders}
@@ -36,7 +36,9 @@ function NftList(props) {
   }
   else {
     return (
-      <span className='text-xl font-bold text-center text-white'>You don't own any Tikis! Mint one! They will show up here!</span>
+      <FlexColumn className={`gap-2 px-4 text-white place-items-center ${props.className}`}>
+        <span className='text-4xl font-bold text-center'>You don't own any Tikis! Mint one! They will show up here!</span>
+      </FlexColumn>
     );
   }
 }
