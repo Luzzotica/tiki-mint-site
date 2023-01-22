@@ -96,6 +96,10 @@ function MintContractRender() {
             <FlexColumn className="flex-1 text-center">
               <p className='text-3xl'>{timerStatus === 'before' ? 'Mint Starts In' : 'Time Remaining'}</p>
               <FlexRow className='gap-4 justify-center'> 
+                {countdown.days > 0 ? <FlexColumn className='w-32'>
+                  <h1 className='flex-auto text-white text-7xl font-extrabold'>{countdown.days}</h1>
+                  <p className='text-xl'>Days</p>
+                </FlexColumn> : <></>}
                 <FlexColumn className='w-32'>
                   <h1 className='flex-auto text-white text-7xl font-extrabold'>{countdown.hours}</h1>
                   <p className='text-xl'>Hours</p>
