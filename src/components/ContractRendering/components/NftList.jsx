@@ -36,7 +36,7 @@ function NftList(props) {
   }
   else {
     return (
-      <span className='text-xl font-bold'>You don't own any Tikis! Mint one! They will show up here!</span>
+      <span className='text-xl font-bold text-center text-white'>You don't own any Tikis! Mint one! They will show up here!</span>
     );
   }
 }
