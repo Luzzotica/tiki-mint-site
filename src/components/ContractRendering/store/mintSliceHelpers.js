@@ -8,6 +8,7 @@ export const getCurrentTier = (tiers) => {
 
   if (!tiers) {
     return {
+      'status': 'final',
       'start-time': { time: now.toISOString() },
       'end-time': { time: earliest.toISOString() },
       cost: -1,
@@ -30,15 +31,26 @@ export const getCurrentTier = (tiers) => {
     // If the start is the same as the end, then we just check if now is after
     // the start time
     if (start.getTime() === end.getTime() && now >= start) {
-      return tier;
+      return {
+        ...tier,
+        'status': 'final',
+      }
     }
     else if (now >= start && now <= end) {
-      return tier;
+      return {
+        ...tier,
+        'status': 'during',
+      }
     }
   }
   
   // If we get here, then we are not in any tier
+  var status = 'before';
+  if (now > earliest) {
+    status = 'inactive';
+  }
   return {
+    'status': status,
     'start-time': { time: now.toISOString() },
     'end-time': { time: earliest.toISOString() },
     cost: -1,
