@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { local, signAndSend } from '../../KDAWallet/store/kadenaSlice';
+import { local, localAndSend, signAndSend } from '../../KDAWallet/store/kadenaSlice';
 import { createCap } from '../../KDAWallet/utils/utils';
 import { getCurrentTier } from './mintSliceHelpers';
 
@@ -150,9 +150,37 @@ export const mintNft = (chainId, account, amount, price) => {
     ]
     // var result = await dispatch(local(chainId, pactCode, {}, caps, 2000 * amount, 1e-8, false, true));
 
-    dispatch(mintSlice.actions.setMinted(minted + amount));
-    var result = await dispatch(signAndSend(chainId, pactCode, {}, caps, 2000 * amount, 1e-8));
+    var result = await dispatch(localAndSend(chainId, 
+      pactCode, 
+      {}, 
+      caps, 
+      2000 * amount, 
+      1e-8));
     console.log('Normal', result);
+    
+    if (result.result.status === 'success') {
+      dispatch(mintSlice.actions.setMinted(minted + amount));
+      for (var i = 0; i < amount; i++) {
+        dispatch(mintSlice.actions.addMintedToken({
+          'token-id': { int: minted + i + 1 },
+          revealed: false
+        }));
+      }
+
+      let currentTier = getState().mintInfo.currentTier;
+      let whitelistInfo = getState().mintInfo.whitelistInfo;
+      // If the whitelist info contains the current tier's tier id, 
+      // increment the count
+      if (whitelistInfo[currentTier['tier-id']]) {
+        let info = JSON.parse(JSON.stringify(whitelistInfo));
+        info[currentTier['tier-id']] += amount;
+        dispatch(mintSlice.actions.setWhitelistInfo(info));
+      }
+    }
+
+    
+    // var result = await dispatch(signAndSend(chainId, pactCode, {}, caps, 2000 * amount, 1e-8));
+    
     // dispatch(mintSlice.setMintedTokens
 
     // if (result.result.status = 'success') {

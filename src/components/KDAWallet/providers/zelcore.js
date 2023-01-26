@@ -45,14 +45,35 @@ const zelcore = {
     }
   },
   sign: async function(state, signingCommand) {
+    // console.log('signing cmd', signingCommand);
+
+    let code = signingCommand.pactCode;
+    let data = signingCommand.envData;
+    delete signingCommand.pactCode;
+    delete signingCommand.envData;
+    let cmd = {
+      ...signingCommand,
+      code: code,
+      data: data,
+    }
+
     window.open('zel:', '_self');
-    return await fetch('http://127.0.0.1:9467/v1/sign', {
+    let res = await fetch('http://127.0.0.1:9467/v1/sign', {
       headers: {
         "Content-Type": "application/json"
       },
       method: "POST",
-      body: JSON.stringify(signingCommand)
-    })
+      body: JSON.stringify(cmd)
+    });
+
+    if (res.ok) {
+      const resJSON = await res.json();
+      // console.log(resJSON);
+      return resJSON.body;
+    } else {
+      const resTEXT = await res.text();
+      return resTEXT;
+    }
   }
 }
 export default zelcore;

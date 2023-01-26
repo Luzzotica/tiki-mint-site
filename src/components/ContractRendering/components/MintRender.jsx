@@ -17,6 +17,7 @@ function MintRender() {
   const [price, setPrice] = useState(-1);
   const [mintCount, setMintCount] = useState(-1);
   const [mintLimit, setMintLimit] = useState(-1);
+  const [remainingMints, setRemainingMints] = useState(-1);
   useEffect(() => {
     // console.log(collectionData);
     if (Object.keys(currentTier).length === 0) {
@@ -27,13 +28,18 @@ function MintRender() {
     // If the tier type is WL, then we need to get our mint count (if any)
     if ('tier-type' in currentTier 
       && currentTier['tier-type'] === 'WL') {
-      console.log(currentTier);
-      if (currentTier['tier-id'] in whitelistInfo) {
+      // console.log('current tier: ', currentTier);
+      // console.log('whitelist info: ', whitelistInfo);
+
+      // Whitelisted if the tier is our whitelist 
+      // and the whitelist mint count is not -1
+      if (currentTier['tier-id'] in whitelistInfo
+        && whitelistInfo[currentTier['tier-id']]['int'] >= 0) {
         setMintCount(whitelistInfo[currentTier['tier-id']]['int']);
         setMintLimit(currentTier['limit']);
         setPrice(currentTier.cost);
       }
-      else { // If we aren't whitelisted, set the price to 0
+      else { // If we aren't whitelisted, set the price to -1
         setMintCount(-1);
         setMintLimit(-1);
         setPrice(-1);
@@ -47,12 +53,19 @@ function MintRender() {
     
   }, [currentTier, whitelistInfo]);
 
+  useEffect(() => {
+    if (mintCount === -1 || mintLimit === -1) {
+      setRemainingMints(-1);
+    }
+    setRemainingMints(mintLimit - mintCount);
+  }, [mintCount, mintLimit]);
+
   const [amount, setAmount] = useState(1);
   const step = (value) => {
     if (amount + value < 1 || amount + value > 10) {
       return;
     } 
-    if (mintLimit !== -1 && amount + value > mintLimit - mintCount) {
+    if (mintLimit !== -1 && amount + value > remainingMints) {
       return;
     }
 
@@ -68,12 +81,18 @@ function MintRender() {
       <FlexColumn className="w-96 gap-4 justify-center place-items-center">
         {price >= 0 && mintCount !== -1 ? 
           <FlexColumn className="flex-auto gap-4 text-center content-center">
-            <p className='text-xl'>You can mint from this tier {mintLimit - mintCount}{mintLimit - mintCount === 1.0 ? ' time' : ' times'}</p>
+            <p className='text-xl'>
+              {remainingMints === 0 ? 
+                'No more mints for this tier!'
+              : 
+                `You can mint from this tier ${remainingMints}${remainingMints === 1.0 ? ' time' : ' times'}`
+              }
+            </p>
           </FlexColumn>
         :
           <></>
         }
-        {price >= 0 ? 
+        {price >= 0 || (currentTier['tier-type'] === 'WL' && remainingMints > 0) ? 
           <FlexColumn className="flex-auto w-64 gap-4 place-items-stretch">
             <FlexRow className="flex-1 gap-2 place-items-stretch">
               <CustomButton

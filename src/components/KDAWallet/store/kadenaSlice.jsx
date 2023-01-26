@@ -199,6 +199,77 @@ export const local = (chainId, pactCode, envData, caps=[],
   }
 }
 
+export const localAndSend = (chainId, pactCode, envData, 
+  caps=[], gasLimit=75000, gasPrice=1e-8, b1=false, b2=false) => {
+  return async function sign(dispatch, getState) {
+    
+    try {
+      let providerName = getState().kadenaInfo.provider;
+      if (providerName === '') {
+        dispatch(kadenaSlice.actions.addMessage({
+          type: 'error',
+          data: `No wallet connected`,
+        }));
+        return;
+      }
+
+      let provider = providers[providerName];
+      let signingCmd = createSigningCommand(
+        getState, 
+        chainId, 
+        pactCode, 
+        envData, 
+        caps, 
+        gasLimit, 
+        gasPrice
+      );
+      // console.log(signingCmd);
+      let signedCmd = await provider.sign(getState, signingCmd);
+      let localRes = await localCommand(getState, chainId, signedCmd);
+      if (localRes.result.status === 'success') {
+        // console.log('signingCmd');
+        // console.log(signedCmd);
+        let sendRes = await sendCommand(getState, chainId, signedCmd);
+        // console.log(res);
+
+        let reqKey = sendRes.requestKeys[0];
+        let reqListen = listenTx(getState, chainId, reqKey);
+        let txData = {
+          ...localRes,
+          listenPromise: reqListen,
+        };
+        // console.log("tx data");
+        // console.log(txData);
+        dispatch(kadenaSlice.actions.addTransaction(txData));
+        const e = new CustomEvent(EVENT_NEW_TX, { detail: txData });
+        document.dispatchEvent(e);
+
+        return txData;
+      }
+      else {
+        console.log(localRes);
+        const msg = {
+          type: 'error',
+          data: `Command failed to execute: ${localRes.result.error.message}`,
+        };
+        const event = new CustomEvent(EVENT_NEW_MSG, { detail: msg });
+        document.dispatchEvent(event);
+        dispatch(kadenaSlice.actions.addMessage(msg));
+      }
+    }
+    catch (e) {
+      const msg = {
+        type: 'error',
+        data: `Failed to sign command: ${e}`,
+      };
+      const event = new CustomEvent(EVENT_NEW_MSG, { detail: msg });
+      document.dispatchEvent(event);
+      dispatch(kadenaSlice.actions.addMessage(msg));
+      // toast.error('Failed to sign command');
+    }
+  };
+}
+
 export const signAndSend = (chainId, pactCode, envData, 
   caps=[], gasLimit=75000, gasPrice=1e-8) => {
   return async function sign(dispatch, getState) {
