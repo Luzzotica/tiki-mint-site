@@ -17,7 +17,8 @@ function NftList(props) {
       l.push(<NftRender
         key={`nft-${userNfts[i]['token-id']['int']}`} 
         nft={userNfts[i]} 
-        uri={`${uriRoot}${userNfts[i]['token-id']['int']}.gif`}/>);
+        uri={`${uriRoot}${userNfts[i]['token-id']['int']}.gif`}
+        metadataUri={`${uriRoot}${userNfts[i]['token-id']['int']}.json`}/>);
     }
 
     setNftRenders(l);
@@ -28,9 +29,12 @@ function NftList(props) {
     return (
       <FlexColumn className={`gap-2 px-4 text-white place-items-center ${props.className}`}>
         <span className='text-7xl font-bold text-center'>Your Tikis</span>
-        <FlexRow className='w-full flex-1 gap-2 justify-around place-items-center '>
+        <div className='w-full grid grid-flow-row grid-cols-1 xl:grid-cols-2 gap-4 place-items-center'>
           {nftRenders}
-        </FlexRow>
+        </div>
+        {/* <FlexRow className='w-full flex-1 gap-2 justify-around place-items-center '>
+          {nftRenders}
+        </FlexRow> */}
       </FlexColumn>
     );
   }
