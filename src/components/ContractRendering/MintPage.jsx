@@ -13,10 +13,10 @@ import FlexColumn from '../Layout/FlexColumn';
 import { messageToastManager, txToastManager, walletConnectedToastManager } from '../TxToast/TxToastManager';
 import MintContractRender from './components/MintContractRender';
 import MintRender from './components/MintRender';
+import NftList from './components/NftList';
 import { initAccountData, initMintContractData } from './store/mintSlice';
 
 import './index.css'
-import NftList from './components/NFTList';
 
 function MintPage() {
   const chainId = import.meta.env.VITE_CHAIN_ID
