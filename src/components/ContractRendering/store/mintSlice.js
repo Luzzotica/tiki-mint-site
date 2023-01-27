@@ -173,7 +173,7 @@ export const mintNft = (chainId, account, amount, price) => {
       // increment the count
       if (whitelistInfo[currentTier['tier-id']]) {
         let info = JSON.parse(JSON.stringify(whitelistInfo));
-        info[currentTier['tier-id']] += amount;
+        info[currentTier['tier-id']]['int'] += amount;
         dispatch(mintSlice.actions.setWhitelistInfo(info));
       }
     }
